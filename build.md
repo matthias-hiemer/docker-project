@@ -23,3 +23,7 @@ docker login
 ```sh
 docker push mahmoudfawzykhalil/java-coffee-beans:latest 
 ```
+
+```sh
+docker run -p 8080:8080 mahmoudfawzykhalil/java-coffee-beans:latest
+```
