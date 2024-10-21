@@ -30,7 +30,9 @@ public class SecurityConfig {
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)) // Store logged in user in HTTP session
             .exceptionHandling(e -> e
                 .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))) // If user fails to login return 401 unauthorized status
-            .oauth2Login(o -> o.defaultSuccessUrl(appUrl)); // Redirect to appUrl if login is successful
+            .oauth2Login(o -> o.defaultSuccessUrl(appUrl)) // Redirect to appUrl if login is successful
+            .logout(l -> l.logoutUrl("/api/auth/logout") // url that logs out the user
+                    .logoutSuccessHandler((request, response, authentication) -> response.setStatus(HttpStatus.OK.value()))); // return 200 OK status on logout
         return http.build();
     }
 

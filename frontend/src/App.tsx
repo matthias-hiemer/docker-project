@@ -11,6 +11,16 @@ function App() {
         // http://localhost:8080/oauth2/authorization/github
     }
 
+    function logout() {
+        axios.post("/api/auth/logout")
+            .then(() => {
+                setUsername("")
+            })
+            .catch(error => {
+                console.error("Logout failed:", error)
+            })
+    }
+
     const loadUser = () => {
         axios.get('/api/auth/me')
             .then(response => {
@@ -29,12 +39,12 @@ function App() {
 
     return (
         <>
-            <button onClick={login}>
-                Login with GitHub
-            </button>
+            <button onClick={login}>Login with GitHub</button>
+            <button onClick={logout}>Logout</button>
+
 
             {username &&
-                <h1>Welcome, {username}</h1>
+                <h3>Welcome, {username}</h3>
             }
         </>
     )
