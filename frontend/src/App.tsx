@@ -3,10 +3,10 @@ import axios from "axios";
 import {useEffect, useState} from "react";
 import {Link, Route, Routes} from "react-router-dom";
 import Settings from "./Settings.tsx";
-import ProtectedRoute from "./ProtectedRoute.tsx";
+import ProtectedRoutes from "./ProtectedRoutes.tsx";
 
 function App() {
-    const [username, setUsername] = useState("");
+    const [username, setUsername] = useState<string | undefined>()
 
     function login() {
         const host = window.location.host === 'localhost:5173' ? 'http://localhost:8080' : window.location.origin
@@ -33,6 +33,7 @@ function App() {
             })
             .catch(error => {
                 console.log(error)
+                setUsername("")
             })
     }
 
@@ -44,7 +45,6 @@ function App() {
         <>
             <button onClick={login}>Login with GitHub</button>
             <button onClick={logout}>Logout</button>
-
 
             {username &&
                 <h3>Welcome, {username}</h3>
@@ -60,11 +60,10 @@ function App() {
             <Routes>
                 <Route path="/" element={<h1>Home</h1>}/>
 
-                <Route element={<ProtectedRoute user={username}/>}>
-                    <Route path="/settings" element={<Settings/>}/>
+                <Route element={<ProtectedRoutes user={username} />}>
+                    <Route path="/settings" element={<Settings />}/>
                 </Route>
             </Routes>
-
 
         </>
     )
