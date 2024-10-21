@@ -1,6 +1,9 @@
 import './App.css'
 import axios from "axios";
 import {useEffect, useState} from "react";
+import {Link, Route, Routes} from "react-router-dom";
+import Settings from "./Settings.tsx";
+import ProtectedRoute from "./ProtectedRoute.tsx";
 
 function App() {
     const [username, setUsername] = useState("");
@@ -46,6 +49,23 @@ function App() {
             {username &&
                 <h3>Welcome, {username}</h3>
             }
+
+            <div>
+                <Link to={"/"}> Home </Link>
+                {username &&
+                    <Link to="/settings"> Settings </Link>
+                }
+            </div>
+
+            <Routes>
+                <Route path="/" element={<h1>Home</h1>}/>
+
+                <Route element={<ProtectedRoute user={username}/>}>
+                    <Route path="/settings" element={<Settings/>}/>
+                </Route>
+            </Routes>
+
+
         </>
     )
 }
