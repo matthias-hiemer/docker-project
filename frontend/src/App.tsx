@@ -1,9 +1,12 @@
 import './App.css'
 import axios from "axios";
 import {useEffect, useState} from "react";
+import {Route, Routes} from "react-router-dom";
+import Settings from "./Settings.tsx";
+import ProtectedRoutes from "./ProtectedRoutes.tsx";
 
 function App() {
-    const [username, setUsername] = useState("");
+    const [username, setUsername] = useState<string | undefined>();
 
     function login() {
         const host = window.location.host === 'localhost:5173' ? 'http://localhost:8080' : window.location.origin
@@ -30,6 +33,7 @@ function App() {
             })
             .catch(error => {
                 console.log(error)
+                setUsername("")
             })
     }
 
@@ -49,6 +53,15 @@ function App() {
             {username &&
                 <h1>Welcome, {username}</h1>
             }
+
+            <Routes>
+                <Route path="/" element={<h1>Home</h1>} />
+
+                <Route element={<ProtectedRoutes user={username} />}>
+                    <Route path="/settings" element={<Settings />} />
+                </Route>
+
+            </Routes>
         </>
     )
 }
