@@ -31,7 +31,8 @@ public class SecurityConfig {
             .exceptionHandling(e -> e
                 .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))) // If user fails to login return 401 unauthorized status
             .oauth2Login(o -> o.defaultSuccessUrl(appUrl)) // Redirect to appUrl if login is successful
-            .logout(l -> l.logoutUrl("/api/auth/logout")); // Logout URL);
+            .logout(l -> l.logoutUrl("/api/auth/logout")
+                    .logoutSuccessHandler((request, response, authentication) -> response.setStatus(HttpStatus.OK.value())));
         return http.build();
     }
 

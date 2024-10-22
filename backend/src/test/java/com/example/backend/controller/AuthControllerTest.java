@@ -42,4 +42,26 @@ class AuthControllerTest {
                 .andExpect(content().string("John"));
     }
 
+    @Test
+    void logout_whenLoggingOut_returnOk() throws Exception {
+
+        // WHEN
+        mockMvc.perform(get("/api/auth/logout")
+                .with(oidcLogin().userInfoToken(token -> token
+                        .claim("login", "John"))))
+
+            // THEN
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    void logout_whenNotLoggedIn_return401() throws Exception {
+
+        // WHEN
+        mockMvc.perform(get("/api/auth/logout"))
+
+                // THEN
+                .andExpect(status().isOk());
+    }
+
 }
