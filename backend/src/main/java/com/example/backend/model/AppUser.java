@@ -9,6 +9,7 @@ public record AppUser(
         String id,
         String username,
         String avatarUrl,
-        List<String> favorites
+        List<String> favorites,
+        String role
 ) {
 }

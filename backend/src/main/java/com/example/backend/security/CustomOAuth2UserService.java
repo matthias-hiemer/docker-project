@@ -3,8 +3,10 @@ package com.example.backend.security;
 import com.example.backend.model.AppUser;
 import com.example.backend.repo.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +29,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .orElseGet( () -> createAndSaveUser(oAuth2User) );
 
         // return oauth user
-        return oAuth2User;
+        return new DefaultOAuth2User(List.of(new SimpleGrantedAuthority(appUser.role())), oAuth2User.getAttributes(), "id");
     }
 
     private AppUser createAndSaveUser(OAuth2User oAuth2User) {
@@ -36,6 +38,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .username(oAuth2User.getAttribute("login"))
                 .avatarUrl(oAuth2User.getAttribute("avatar_url"))
                 .favorites(List.of())
+                .role("USER")
                 .build();
 
         return userRepository.save(newUser);
