@@ -2,7 +2,8 @@ package com.example.backend.security;
 
 import com.example.backend.model.AppUser;
 import com.example.backend.repo.UserRepository;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -13,16 +14,17 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
-    private final UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest request) {
 
         // Load user
-        OAuth2User oAuth2User = super.loadUser(request);
+        OAuth2User oAuth2User = loadUserFromDefault(request);
 
         // Check if user exist, if not create it
         AppUser appUser = userRepository.findById(oAuth2User.getName())
@@ -30,6 +32,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         // return oauth user
         return new DefaultOAuth2User(List.of(new SimpleGrantedAuthority(appUser.role())), oAuth2User.getAttributes(), "id");
+    }
+
+    public OAuth2User loadUserFromDefault(OAuth2UserRequest request) {
+        return super.loadUser(request);
     }
 
     private AppUser createAndSaveUser(OAuth2User oAuth2User) {
